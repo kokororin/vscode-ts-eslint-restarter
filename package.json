@@ -2,7 +2,7 @@
  "name": "restart-ts-eslint-server",
   "displayName": "Restart TS/ESLint Server",
   "description": "The Restart TS/ESlint server button on your VS Code Status Bar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "acoreyj",
   "engines": {
     "vscode": "^1.79.0"
@@ -12,7 +12,7 @@
     "commands": [
       {
         "command": "restart-ts-eslint-server.softRestartBothCommand",
-        "title": "Restart TS/Eslint Server"
+        "title": "Restart TS/ESLint Server"
       }
     ]
   },

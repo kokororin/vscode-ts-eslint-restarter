@@ -4,7 +4,7 @@ The TypeScript Language Server and ESlint server becomes slow over long period o
 
 This extension adds a convenient _Restart TS_, _Restart ESLint_ and _Restart Both_ button to the Status Bar which allows you to quickly restart them.
 
-This extension also adds a _Restart TS/Eslint Server_ command to the command palette (Ctrl + Shift + p)
+This extension also adds a _Restart TS/ESLint Server_ command to the command palette (Ctrl + Shift + p)
 
 ![Button preview](images/buttons.png)
 
