@@ -8,10 +8,10 @@ let restartTsEslintBoth: vscode.StatusBarItem;
 const TYPESCRIPT_EXTENSION_ID = "vscode.typescript-language-features";
 const ESLINT_EXTENSION_ID = "dbaeumer.vscode-eslint";
 
-const RESTART_TS_SERVER_LABEL = "$(debug-restart) Restart TS server";
-const RESTART_ESLINT_SERVER_LABEL = "$(debug-restart) Restart ESLint server";
-const RESTART_BOTH_LABEL = "$(debug-restart) Restart both";
-const THIS_EXT_NAME = "vscode-restart-ts-eslint";
+const RESTART_TS_SERVER_LABEL = "$(debug-restart) Restart TS";
+const RESTART_ESLINT_SERVER_LABEL = "$(debug-restart) Restart ESLint";
+const RESTART_BOTH_LABEL = "$(debug-restart) Restart Both";
+const THIS_EXT_NAME = "restart-ts-eslint-server";
 const THIS_EXT_ID = `acoreyj.${THIS_EXT_NAME}`;
 const SUPPORTED_LANGUAGES = [
   "javascript",
@@ -38,14 +38,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
   restartTsEslintTs = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
-    0
+    1
   );
   restartTsEslintTs.command = `${THIS_EXT_NAME}.softRestartTsServer`;
   restartTsEslintTs.text = RESTART_TS_SERVER_LABEL;
 
   restartTsEslintEslint = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
-    0
+    1
   );
   restartTsEslintEslint.command = `${THIS_EXT_NAME}.softRestartEslintServer`;
   restartTsEslintEslint.text = RESTART_ESLINT_SERVER_LABEL;
@@ -56,6 +56,11 @@ export async function activate(context: vscode.ExtensionContext) {
   );
   restartTsEslintBoth.command = `${THIS_EXT_NAME}.softRestartBoth`;
   restartTsEslintBoth.text = RESTART_BOTH_LABEL;
+
+  const restartBothCommandPalette = vscode.commands.registerCommand(
+    `${THIS_EXT_NAME}.softRestartBothCommand`,
+    softRestartBoth
+  );
 
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(updateStatusBarItemVisibility)
@@ -69,6 +74,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidOpenTextDocument(updateStatusBarItemVisibility)
   );
+  context.subscriptions.push(restartBothCommandPalette);
 
   updateStatusBarItemVisibility();
   console.log(`Extension ${THIS_EXT_ID} is now active!`);
