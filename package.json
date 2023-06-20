@@ -3,6 +3,7 @@
   "displayName": "Restart TS/ESLint Server",
   "description": "The Restart TS/ESlint server button on your VS Code Status Bar",
   "version": "1.0.0",
+  "publisher": "acoreyj",
   "engines": {
     "vscode": "^1.79.0"
   },
