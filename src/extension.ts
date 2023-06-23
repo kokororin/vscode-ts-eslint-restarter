@@ -18,6 +18,7 @@ const SUPPORTED_LANGUAGES = [
   "javascriptreact",
   "typescript",
   "typescriptreact",
+  "svelte"
 ];
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -124,8 +125,11 @@ function updateStatusBarItemVisibility(): void {
     restartTsEslintBoth.hide();
   } else {
     restartTsEslintTs.show();
-    restartTsEslintEslint.show();
-    restartTsEslintBoth.show();
+    const eslintExtension = vscode.extensions.getExtension(ESLINT_EXTENSION_ID);
+    if (eslintExtension && eslintExtension.isActive  !== false) {
+     restartTsEslintEslint.show();
+     restartTsEslintBoth.show();
+    }
   }
 }
 

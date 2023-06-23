@@ -2,7 +2,7 @@
  "name": "restart-ts-eslint-server",
   "displayName": "Restart TS/ESLint Server",
   "description": "Add Restart TS/ESlint server buttons on your Status Bar and Restart Both in the Command Palette",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "publisher": "acoreyj",
   "engines": {
     "vscode": "^1.79.0"
@@ -12,7 +12,7 @@
     "commands": [
       {
         "command": "restart-ts-eslint-server.softRestartBothCommand",
-        "title": "Restart TS/ESLint Server"
+        "title": "Restart TS & ESLint Server"
       }
     ]
   },
