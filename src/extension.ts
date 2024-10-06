@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { CronJob } from 'cron';
-import pidtree = require('pidtree');
+import pidtree from 'pidtree';
 import getProcesses from 'getprocesses';
-import pidusage = require('pidusage');
+import pidusage from 'pidusage';
 
 let restartTsEslintTs: vscode.StatusBarItem;
 let restartTsEslintEslint: vscode.StatusBarItem;
