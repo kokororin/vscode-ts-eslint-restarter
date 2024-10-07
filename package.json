@@ -2,7 +2,7 @@
   "name": "ts-eslint-restarter",
   "displayName": "TS/ESLint Restarter",
   "description": "Adds Restart TS, ESLint server, and Restart Both buttons to the Status Bar and provides automatic restart functionality for ESLint when memory usage reaches a defined threshold. Also includes a command for restarting both servers from the Command Palette.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "kokororin",
   "engines": {
     "vscode": "^1.79.0"
