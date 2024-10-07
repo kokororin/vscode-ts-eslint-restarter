@@ -1,3 +1,7 @@
+### 1.0.2
+
+- Combine status bar buttons
+
 ### 1.0.1
 
 - Performance issue
