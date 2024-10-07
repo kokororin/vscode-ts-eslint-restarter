@@ -3,11 +3,14 @@ import { CronJob } from 'cron';
 import pidtree from 'pidtree';
 import getProcesses from 'getprocesses';
 import pidusage from 'pidusage';
+import { DateTime } from 'luxon';
 
 let restartTsEslintTs: vscode.StatusBarItem;
 let restartTsEslintEslint: vscode.StatusBarItem;
 let restartTsEslintBoth: vscode.StatusBarItem;
-let job: CronJob;
+let cronJob: CronJob;
+let cronStartTime: DateTime;
+let eslintMaxMemory: number;
 
 const TYPESCRIPT_EXTENSION_ID = 'vscode.typescript-language-features';
 const ESLINT_EXTENSION_ID = 'dbaeumer.vscode-eslint';
@@ -68,6 +71,9 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(loadSettings)
+  );
+  context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(updateStatusBarItemVisibility)
   );
   context.subscriptions.push(
@@ -82,6 +88,7 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(restartBothCommandPalette);
 
   updateStatusBarItemVisibility();
+  loadSettings();
   startCron();
   console.log(`Extension ${THIS_EXT_ID} is now active!`);
 }
@@ -138,8 +145,14 @@ function updateStatusBarItemVisibility(): void {
   }
 }
 
+function loadSettings() {
+  eslintMaxMemory = vscode.workspace
+    .getConfiguration(THIS_EXT_NAME)
+    .get<number>('eslintMaxMemory', 3072);
+}
+
 function startCron() {
-  job = new CronJob(
+  cronJob = new CronJob(
     '*/30 * * * * *',
     () => {
       checkEslintServer();
@@ -147,19 +160,23 @@ function startCron() {
     null,
     false
   );
-  job.start();
+  cronJob.start();
+  cronStartTime = DateTime.now();
 }
 
 function stopCron() {
-  if (job) {
-    job.stop();
+  if (cronJob) {
+    cronJob.stop();
   }
 }
 
 async function checkEslintServer() {
-  const eslintMaxMemory = vscode.workspace
-    .getConfiguration(THIS_EXT_NAME)
-    .get<number>('eslintMaxMemory', 3072);
+  if (DateTime.now().diff(cronStartTime).as('minutes') < 3) {
+    return;
+  }
+  if (eslintMaxMemory < 500) {
+    return;
+  }
 
   const mainPid = process.pid;
   const processes = await getProcesses();
@@ -179,7 +196,7 @@ async function checkEslintServer() {
 
   if (memMb > eslintMaxMemory) {
     console.log(
-      `Memory usage of eslint server is over ${eslintMaxMemory} MB (${memMb} bytes).`
+      `Memory usage of eslint server is over ${eslintMaxMemory} MB (${memMb} MB).`
     );
     await softRestartEslintServer();
   }

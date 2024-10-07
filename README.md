@@ -12,6 +12,8 @@ Additionally, the extension provides an automatic restart feature for ESLint whe
 
 ![Command Palette preview](images/commandPalette.png)
 
+![Settings preview](images/settings.jpg)
+
 Inspired by the [Restart TS and ESLint server](https://github.com/acoreyj/vscode-restart-ts-eslint) extension, which does not have the automatic restart feature.
 
 Inspired by the [Restart Your TS Server](https://github.com/HearTao/restart-your-ts-server) extension, which does the same for touch bars.

@@ -22,23 +22,21 @@
         "ts-eslint-restarter.eslintMaxMemory": {
           "type": "integer",
           "default": 3072,
+          "minimum": 500,
           "description": "Maximum memory (in MB) for ESLint server"
         }
       }
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "node ./out/test/runTest.js"
+    "vscode:prepublish": "nr build",
+    "build": "nr clean && tsup",
+    "watch": "tsup --watch",
+    "clean": "rimraf dist",
+    "lint": "eslint src"
   },
   "devDependencies": {
+    "@antfu/ni": "^0.23.0",
     "@eslint/js": "^9.12.0",
     "@kokororin/prettierrc": "^0.1.1",
     "@types/node": "^20.2.5",
@@ -48,13 +46,13 @@
     "eslint": "^9.11.0",
     "getprocesses": "^1.1.1",
     "globals": "^15.10.0",
+		"luxon": "~3.4.0",
     "pidtree": "^0.6.0",
     "pidusage": "^3.0.2",
-    "ts-loader": "^9.4.3",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.0",
     "typescript": "~5.5.0",
-    "typescript-eslint": "^8.8.0",
-    "webpack": "^5.85.0",
-    "webpack-cli": "^5.1.1"
+    "typescript-eslint": "^8.8.0"
   },
   "keywords": [
     "typescript",
