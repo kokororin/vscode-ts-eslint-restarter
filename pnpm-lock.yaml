@@ -7,6 +7,28 @@ settings:
 importers:
 
   .:
+    dependencies:
+      cron:
+        specifier: ^3.1.7
+        version: 3.1.7
+      getprocesses:
+        specifier: ^1.1.1
+        version: 1.1.1
+      luxon:
+        specifier: ~3.4.0
+        version: 3.4.4
+      pidtree:
+        specifier: ^0.6.0
+        version: 0.6.0
+      pidusage:
+        specifier: ^3.0.2
+        version: 3.0.2
+      winston:
+        specifier: ^3.15.0
+        version: 3.15.0
+      winston-transport-vscode:
+        specifier: ^0.1.0
+        version: 0.1.0(winston@3.15.0)
     devDependencies:
       '@antfu/ni':
         specifier: ^0.23.0
@@ -26,27 +48,12 @@ importers:
       '@types/vscode':
         specifier: ^1.79.0
         version: 1.79.1
-      cron:
-        specifier: ^3.1.7
-        version: 3.1.7
       eslint:
         specifier: ^9.11.0
         version: 9.12.0
-      getprocesses:
-        specifier: ^1.1.1
-        version: 1.1.1
       globals:
         specifier: ^15.10.0
         version: 15.10.0
-      luxon:
-        specifier: ~3.4.0
-        version: 3.4.4
-      pidtree:
-        specifier: ^0.6.0
-        version: 0.6.0
-      pidusage:
-        specifier: ^3.0.2
-        version: 3.0.2
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -59,12 +66,6 @@ importers:
       typescript-eslint:
         specifier: ^8.8.0
         version: 8.8.0(eslint@9.12.0)(typescript@5.5.4)
-      winston:
-        specifier: ^3.15.0
-        version: 3.15.0
-      winston-transport-vscode:
-        specifier: ^0.1.0
-        version: 0.1.0(winston@3.15.0)
 
 packages:
 
