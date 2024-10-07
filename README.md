@@ -1,10 +1,10 @@
-# TS/ESLint Server Restarter
+# TS/ESLint Restarter
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/kokororin.ts-eslint-restarter)](https://marketplace.visualstudio.com/items?itemName=kokororin.ts-eslint-restarter)
 
 The TypeScript Language Server and ESlint server becomes slow over long period of usage and sometimes gets stuck when changing files outside of VS Code (eg. changing git branches).
 
-This extension adds a convenient _Restart TS_, _Restart ESLint_ and _Restart Both_ button to the Status Bar which allows you to quickly restart them, a _Restart TS/ESLint Server_ command to the command palette (Ctrl + Shift + p)
+This extension simplifies the process with a single button in the Status Bar. Clicking the button reveals options to restart the TypeScript server, ESLint server, or both. Additionally, a Restart TS/ESLint Server command is available in the command palette (Ctrl + Shift + P).
 
 Additionally, the extension provides an automatic restart feature for ESLint when memory usage reaches a certain threshold.
 

@@ -18,7 +18,8 @@ export default tseslint.config(
       '@typescript-eslint/naming-convention': 'warn',
       curly: 'warn',
       eqeqeq: 'warn',
-      'no-throw-literal': 'warn'
+      'no-throw-literal': 'warn',
+      'no-console': 'warn'
     },
     ignores: ['out', 'dist', '**/*.d.ts']
   }

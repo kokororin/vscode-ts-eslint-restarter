@@ -3,11 +3,10 @@
 out/**
 src/**
 .gitignore
-webpack.config.js
 **/tsconfig.json
 **/*.map
 **/*.ts
-**/*.psd
 pnpm-lock.yaml
 *.config.js
 *.config.mjs
+.npmrc

@@ -4,71 +4,33 @@ import pidtree from 'pidtree';
 import getProcesses from 'getprocesses';
 import pidusage from 'pidusage';
 import { DateTime } from 'luxon';
+import { logger } from './logger';
+import {
+  THIS_EXT_NAME,
+  THIS_EXT_ID,
+  RESTART_LABEL,
+  ESLINT_EXTENSION_ID,
+  TYPESCRIPT_EXTENSION_ID,
+  SUPPORTED_LANGUAGES
+} from './constants';
 
-let restartTsEslintTs: vscode.StatusBarItem;
-let restartTsEslintEslint: vscode.StatusBarItem;
-let restartTsEslintBoth: vscode.StatusBarItem;
+let restartTsEslint: vscode.StatusBarItem;
+let hasESLint = false;
 let cronJob: CronJob;
 let cronStartTime: DateTime;
 let eslintMaxMemory: number;
 
-const TYPESCRIPT_EXTENSION_ID = 'vscode.typescript-language-features';
-const ESLINT_EXTENSION_ID = 'dbaeumer.vscode-eslint';
-
-const RESTART_TS_SERVER_LABEL = '$(debug-restart) Restart TS';
-const RESTART_ESLINT_SERVER_LABEL = '$(debug-restart) Restart ESLint';
-const RESTART_BOTH_LABEL = '$(debug-restart) Restart Both';
-const THIS_EXT_NAME = 'ts-eslint-restarter';
-const THIS_EXT_ID = `kokororin.${THIS_EXT_NAME}`;
-const SUPPORTED_LANGUAGES = [
-  'javascript',
-  'javascriptreact',
-  'typescript',
-  'typescriptreact',
-  'svelte'
-];
-
 export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${THIS_EXT_NAME}.softRestartTsServer`,
-      softRestartTsServer
-    ),
-    vscode.commands.registerCommand(
-      `${THIS_EXT_NAME}.softRestartEslintServer`,
-      softRestartEslintServer
-    ),
-    vscode.commands.registerCommand(
-      `${THIS_EXT_NAME}.softRestartBoth`,
-      softRestartBoth
-    )
+    vscode.commands.registerCommand(`${THIS_EXT_NAME}.softRestart`, softRestart)
   );
 
-  restartTsEslintTs = vscode.window.createStatusBarItem(
+  restartTsEslint = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
     1
   );
-  restartTsEslintTs.command = `${THIS_EXT_NAME}.softRestartTsServer`;
-  restartTsEslintTs.text = RESTART_TS_SERVER_LABEL;
-
-  restartTsEslintEslint = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left,
-    1
-  );
-  restartTsEslintEslint.command = `${THIS_EXT_NAME}.softRestartEslintServer`;
-  restartTsEslintEslint.text = RESTART_ESLINT_SERVER_LABEL;
-
-  restartTsEslintBoth = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left,
-    0
-  );
-  restartTsEslintBoth.command = `${THIS_EXT_NAME}.softRestartBoth`;
-  restartTsEslintBoth.text = RESTART_BOTH_LABEL;
-
-  const restartBothCommandPalette = vscode.commands.registerCommand(
-    `${THIS_EXT_NAME}.softRestartBothCommand`,
-    softRestartBoth
-  );
+  restartTsEslint.command = `${THIS_EXT_NAME}.softRestart`;
+  restartTsEslint.text = RESTART_LABEL;
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(loadSettings)
@@ -85,12 +47,33 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidOpenTextDocument(updateStatusBarItemVisibility)
   );
-  context.subscriptions.push(restartBothCommandPalette);
 
   updateStatusBarItemVisibility();
   loadSettings();
   startCron();
-  console.log(`Extension ${THIS_EXT_ID} is now active!`);
+  logger.info(`Extension ${THIS_EXT_ID} is now active!`);
+}
+
+async function softRestart() {
+  const pickOptions = [
+    'TypeScript',
+    hasESLint ? 'ESLint' : '',
+    hasESLint ? 'Both' : ''
+  ].filter(Boolean);
+
+  const targetResult = await vscode.window.showQuickPick(pickOptions, {
+    placeHolder: 'What do you want to restart?'
+  });
+  if (!targetResult) {
+    return;
+  }
+  if (targetResult === 'TypeScript') {
+    await softRestartTsServer();
+  } else if (targetResult === 'ESLint') {
+    await softRestartEslintServer();
+  } else if (targetResult === 'Both') {
+    await softRestartBoth();
+  }
 }
 
 function softRestartEslintServer() {
@@ -132,15 +115,13 @@ function updateStatusBarItemVisibility(): void {
     !activeTextEditor.document ||
     SUPPORTED_LANGUAGES.indexOf(activeTextEditor.document.languageId) === -1
   ) {
-    restartTsEslintTs.hide();
-    restartTsEslintEslint.hide();
-    restartTsEslintBoth.hide();
+    restartTsEslint.hide();
+    hasESLint = false;
   } else {
-    restartTsEslintTs.show();
+    restartTsEslint.show();
     const eslintExtension = vscode.extensions.getExtension(ESLINT_EXTENSION_ID);
     if (eslintExtension && eslintExtension.isActive !== false) {
-      restartTsEslintEslint.show();
-      restartTsEslintBoth.show();
+      hasESLint = true;
     }
   }
 }
@@ -148,7 +129,7 @@ function updateStatusBarItemVisibility(): void {
 function loadSettings() {
   eslintMaxMemory = vscode.workspace
     .getConfiguration(THIS_EXT_NAME)
-    .get<number>('eslintMaxMemory', 3072);
+    .get<number>('eslintMaxMemory')!;
 }
 
 function startCron() {
@@ -195,7 +176,7 @@ async function checkEslintServer() {
   const memMb = Math.round(stats.memory / 1024 / 1024);
 
   if (memMb > eslintMaxMemory) {
-    console.log(
+    logger.warn(
       `Memory usage of eslint server is over ${eslintMaxMemory} MB (${memMb} MB).`
     );
     await softRestartEslintServer();
@@ -205,5 +186,5 @@ async function checkEslintServer() {
 // this method is called when your extension is deactivated
 export function deactivate() {
   stopCron();
-  console.log(`Extension ${THIS_EXT_ID} is now inactive!`);
+  logger.info(`Extension ${THIS_EXT_ID} is now inactive!`);
 }

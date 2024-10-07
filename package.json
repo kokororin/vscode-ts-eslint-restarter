@@ -1,7 +1,7 @@
 {
   "name": "ts-eslint-restarter",
   "displayName": "TS/ESLint Restarter",
-  "description": "Adds Restart TS, ESLint server, and Restart Both buttons to the Status Bar and provides automatic restart functionality for ESLint when memory usage reaches a defined threshold. Also includes a command for restarting both servers from the Command Palette.",
+  "description": "Adds a Status Bar button to restart the TS or ESLint server, or both, with automatic ESLint restart when memory exceeds a threshold. Includes a Command Palette option to restart the servers.",
   "version": "1.0.1",
   "publisher": "kokororin",
   "engines": {
@@ -11,7 +11,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "ts-eslint-restarter.softRestartBothCommand",
+        "command": "ts-eslint-restarter.softRestart",
         "title": "Restart TS & ESLint Server"
       }
     ],
@@ -46,13 +46,15 @@
     "eslint": "^9.11.0",
     "getprocesses": "^1.1.1",
     "globals": "^15.10.0",
-		"luxon": "~3.4.0",
+    "luxon": "~3.4.0",
     "pidtree": "^0.6.0",
     "pidusage": "^3.0.2",
     "rimraf": "^6.0.1",
     "tsup": "^8.3.0",
     "typescript": "~5.5.0",
-    "typescript-eslint": "^8.8.0"
+    "typescript-eslint": "^8.8.0",
+    "winston": "^3.15.0",
+    "winston-transport-vscode": "^0.1.0"
   },
   "keywords": [
     "typescript",
