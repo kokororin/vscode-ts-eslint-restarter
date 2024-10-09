@@ -76,7 +76,7 @@ async function softRestart() {
   }
 }
 
-function softRestartEslintServer() {
+async function softRestartEslintServer() {
   const eslintExtension = vscode.extensions.getExtension(ESLINT_EXTENSION_ID);
   if (!eslintExtension || eslintExtension.isActive === false) {
     vscode.window.showErrorMessage(
@@ -85,7 +85,7 @@ function softRestartEslintServer() {
     return;
   }
 
-  return vscode.commands.executeCommand('eslint.restart');
+  await vscode.commands.executeCommand('eslint.restart');
 }
 
 async function softRestartTsServer() {
@@ -177,9 +177,9 @@ async function checkEslintServer() {
 
   if (memMb > eslintMaxMemory) {
     logger.warn(
-      `Memory usage of eslint server is over ${eslintMaxMemory} MB (${memMb} MB).`
+      `Memory usage of eslint server is over ${eslintMaxMemory} MB (${memMb} MB). Restarting...`
     );
-    await softRestartEslintServer();
+    process.kill(eslintProcess.pid, 'SIGKILL');
   }
 }
 

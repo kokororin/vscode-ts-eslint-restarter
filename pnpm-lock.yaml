@@ -39,6 +39,9 @@ importers:
       '@kokororin/prettierrc':
         specifier: ^0.1.1
         version: 0.1.1
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.4.2
       '@types/node':
         specifier: ^20.2.5
         version: 20.2.5
